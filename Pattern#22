@@ -1,0 +1,54 @@
+#include <iostream>
+#include <string>
+class Element {
+public:
+    virtual ~Element() {}
+    virtual void accept(class Visitor& visitor) = 0;  
+};
+
+class Visitor {
+public:
+    virtual void visit(class ConcreteElementA& element) = 0;
+    virtual void visit(class ConcreteElementB& element) = 0;
+};
+class ConcreteElementA : public Element {
+public:
+    void accept(Visitor& visitor) override {
+        visitor.visit(*this);
+    }
+
+    void operationA() {
+        std::cout << "ConcreteElementA operation" << std::endl;
+    }
+};
+class ConcreteElementB : public Element {
+public:
+    void accept(Visitor& visitor) override {
+        visitor.visit(*this);  
+    }
+
+    void operationB() {
+        std::cout << "ConcreteElementB operation" << std::endl;
+    }
+};
+class ConcreteVisitor : public Visitor {
+public:
+    void visit(ConcreteElementA& element) override {
+        std::cout << "Visiting ConcreteElementA" << std::endl;
+        element.operationA();
+    }
+
+    void visit(ConcreteElementB& element) override {
+        std::cout << "Visiting ConcreteElementB" << std::endl;
+        element.operationB();
+    }
+};
+int main() {
+    ConcreteElementA elementA;
+    ConcreteElementB elementB;
+    ConcreteVisitor visitor;
+    elementA.accept(visitor);
+    elementB.accept(visitor);
+
+    return 0;
+}
