@@ -1,0 +1,57 @@
+#include <iostream>
+#include <string>
+class Memento {
+private:
+    std::string state;
+
+public:
+    Memento(const std::string& state) : state(state) {}
+    std::string getState() const {
+        return state;
+    }
+};
+class Originator {
+private:
+    std::string state;
+
+public:
+    void setState(const std::string& state) {
+        this->state = state;
+    }
+    std::string getState() const {
+        return state;
+    }
+    Memento* createMemento() {
+        return new Memento(state);
+    }
+    void restoreFromMemento(Memento* memento) {
+        state = memento->getState();
+        delete memento;
+    }
+};
+class Caretaker {
+private:
+    Memento* memento;
+
+public:
+    void saveState(Originator& originator) {
+        memento = originator.createMemento();
+    }
+
+    void restoreState(Originator& originator) {
+        originator.restoreFromMemento(memento);
+    }
+};
+int main() {
+    Originator originator;
+    Caretaker caretaker;
+    originator.setState("State 1");
+    std::cout << "Current state: " << originator.getState() << std::endl;
+    caretaker.saveState(originator);
+    originator.setState("State 2");
+    std::cout << "Current state: " << originator.getState() << std::endl;
+    caretaker.restoreState(originator);
+    std::cout << "State after restore: " << originator.getState() << std::endl;
+
+    return 0;
+}
