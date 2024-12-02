@@ -1,0 +1,65 @@
+#include <iostream>
+#include <string>
+class Mediator {
+public:
+    virtual void send(const std::string& message, class Colleague* colleague) = 0;
+};
+class Colleague {
+protected:
+    Mediator* mediator;
+public:
+    Colleague(Mediator* mediator) : mediator(mediator) {}
+    virtual void receive(const std::string& message) = 0;
+    virtual void send(const std::string& message) {
+        mediator->send(message, this);
+    }
+};
+class ConcreteMediator : public Mediator {
+private:
+    Colleague* colleague1;
+    Colleague* colleague2;
+
+public:
+    void setColleagues(Colleague* c1, Colleague* c2) {
+        colleague1 = c1;
+        colleague2 = c2;
+    }
+
+    void send(const std::string& message, Colleague* sender) override {
+        if (sender == colleague1) {
+            colleague2->receive(message);
+        }
+        else {
+            colleague1->receive(message);
+        }
+    }
+};
+class ConcreteColleague1 : public Colleague {
+public:
+    ConcreteColleague1(Mediator* mediator) : Colleague(mediator) {}
+
+    void receive(const std::string& message) override {
+        std::cout << "Colleague 1 received: " << message << std::endl;
+    }
+};
+class ConcreteColleague2 : public Colleague {
+public:
+    ConcreteColleague2(Mediator* mediator) : Colleague(mediator) {}
+
+    void receive(const std::string& message) override {
+        std::cout << "Colleague 2 received: " << message << std::endl;
+    }
+};
+int main() {
+    ConcreteMediator mediator;
+
+    ConcreteColleague1 colleague1(&mediator);
+    ConcreteColleague2 colleague2(&mediator);
+
+    mediator.setColleagues(&colleague1, &colleague2);
+
+    colleague1.send("Hello from Colleague 1");
+    colleague2.send("Hello from Colleague 2");
+
+    return 0;
+}
