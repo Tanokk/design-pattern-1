@@ -1,0 +1,64 @@
+#include <iostream>
+#include <string>
+class Beverage {
+public:
+    virtual std::string getDescription() const = 0;
+    virtual double cost() const = 0;
+    virtual ~Beverage() = default;
+};
+class Coffee : public Beverage {
+public:
+    std::string getDescription() const override {
+        return "Coffee";
+    }
+
+    double cost() const override {
+        return 2.00; 
+    }
+};
+class CondimentDecorator : public Beverage {
+public:
+    virtual std::string getDescription() const override = 0;  
+};
+class MilkDecorator : public CondimentDecorator {
+private:
+    Beverage* beverage;
+public:
+    MilkDecorator(Beverage* b) : beverage(b) {}
+
+    std::string getDescription() const override {
+        return beverage->getDescription() + ", Milk";
+    }
+
+    double cost() const override {
+        return beverage->cost() + 0.50;
+    }
+};
+class SugarDecorator : public CondimentDecorator {
+private:
+    Beverage* beverage;
+public:
+    SugarDecorator(Beverage* b) : beverage(b) {}
+
+    std::string getDescription() const override {
+        return beverage->getDescription() + ", Sugar";
+    }
+
+    double cost() const override {
+        return beverage->cost() + 0.30; 
+    }
+};
+int main() {
+    Beverage* myCoffee = new Coffee();
+    std::cout << "Description: " << myCoffee->getDescription() << "\n";
+    std::cout << "Cost: $" << myCoffee->cost() << "\n";
+    myCoffee = new MilkDecorator(myCoffee);
+    std::cout << "Description: " << myCoffee->getDescription() << "\n";
+    std::cout << "Cost: $" << myCoffee->cost() << "\n";
+    myCoffee = new SugarDecorator(myCoffee);
+    std::cout << "Description: " << myCoffee->getDescription() << "\n";
+    std::cout << "Cost: $" << myCoffee->cost() << "\n";
+
+
+    return 0;
+}
