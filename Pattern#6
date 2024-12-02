@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+class CryptoPaymentSystem {
+public:
+    void payWithCrypto(std::string crypto, double amount) {
+        std::cout << "Paying " << amount << " with " << crypto << " cryptocurrency." << std::endl;
+    }
+};
+class CreditCardPaymentSystem {
+public:
+    void payWithCreditCard(std::string cardNumber, double amount) {
+        std::cout << "Paying " << amount << " with credit card number " << cardNumber << "." << std::endl;
+    }
+};
+class CryptoAdapter {
+private:
+    CryptoPaymentSystem* cryptoPayment;
+public:
+    CryptoAdapter(CryptoPaymentSystem* c) : cryptoPayment(c) {}
+
+    void pay(double amount) {
+        std::string crypto = "Bitcoin"; 
+        cryptoPayment->payWithCrypto(crypto, amount);
+    }
+};
+class CreditCardAdapter {
+private:
+    CreditCardPaymentSystem* creditCardPayment;
+public:
+    CreditCardAdapter(CreditCardPaymentSystem* c) : creditCardPayment(c) {}
+
+    void pay(double amount) {
+        std::string cardNumber = "1234-5678-9876-5432"; 
+        creditCardPayment->payWithCreditCard(cardNumber, amount);
+    }
+};
+int main() {
+    CryptoPaymentSystem cryptoSystem;
+    CreditCardPaymentSystem creditCardSystem;
+    CryptoAdapter cryptoAdapter(&cryptoSystem);
+    CreditCardAdapter creditCardAdapter(&creditCardSystem);
+    std::cout << "Payment with Crypto:" << std::endl;
+    cryptoAdapter.pay(100);
+    std::cout << "\nPayment with Credit Card:" << std::endl;
+    creditCardAdapter.pay(200);
+    return 0;
+}
