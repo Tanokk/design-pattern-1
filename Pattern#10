@@ -1,0 +1,56 @@
+#include <iostream>
+#include <string>
+class CPU {
+public:
+    void freeze() {
+        std::cout << "Freezing the CPU\n";
+    }
+    void jumpToAddress(std::string address) {
+        std::cout << "Jumping to address " << address << "\n";
+    }
+    void execute() {
+        std::cout << "Executing instructions\n";
+    }
+};
+class Memory {
+public:
+    void load(std::string address, std::string data) {
+        std::cout << "Loading data into memory at " << address << ": " << data << "\n";
+    }
+};
+class Disk {
+public:
+    void read(std::string address, std::string data) {
+        std::cout << "Reading data from disk at " << address << ": " << data << "\n";
+    }
+    void write(std::string address, std::string data) {
+        std::cout << "Writing data to disk at " << address << ": " << data << "\n";
+    }
+};
+class ComputerFacade {
+private:
+    CPU cpu;
+    Memory memory;
+    Disk disk;
+
+public:
+    void startComputer() {
+        cpu.freeze();
+        memory.load("0x00FF", "System data");
+        cpu.jumpToAddress("0x00FF");
+        cpu.execute();
+    }
+    void shutdownComputer() {
+        disk.write("0x00FF", "Saving data");
+        std::cout << "Shutting down the computer\n";
+    }
+};
+
+int main() {
+    ComputerFacade computer;
+    std::cout << "Starting the computer...\n";
+    computer.startComputer();
+    std::cout << "\nShutting down the computer...\n";
+    computer.shutdownComputer();
+    return 0;
+}
