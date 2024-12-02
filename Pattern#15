@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+class Iterator {
+public:
+    virtual bool hasNext() = 0;
+    virtual std::string next() = 0;
+};
+class SimpleIterator : public Iterator {
+private:
+    std::string* items;
+    int size;
+    int currentIndex;
+
+public:
+    SimpleIterator(std::string* arr, int s) : items(arr), size(s), currentIndex(0) {}
+
+    bool hasNext() override {
+        return currentIndex < size;
+    }
+
+    std::string next() override {
+        return items[currentIndex++];
+    }
+};
+class SimpleCollection {
+private:
+    std::string items[5] = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+
+public:
+    Iterator* createIterator() {
+        return new SimpleIterator(items, 5);
+    }
+};
+
+int main() {
+    SimpleCollection collection;  
+    Iterator* iterator = collection.createIterator(); 
+    while (iterator->hasNext()) {
+        std::cout << iterator->next() << std::endl();
+    }
+
+    return 0;
+}
