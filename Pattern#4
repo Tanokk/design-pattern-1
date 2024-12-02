@@ -1,0 +1,52 @@
+#include <iostream>
+#include <string>
+class Car {
+public:
+    virtual Car* clone() const = 0; 
+    virtual void display() const = 0; 
+    virtual ~Car() = default;
+};
+class SportsCar : public Car {
+private:
+    std::string model;
+    int horsepower;
+public:
+    SportsCar(std::string m, int hp) : model(m), horsepower(hp) {}
+
+    Car* clone() const override {
+        return new SportsCar(*this); 
+    }
+
+    void display() const override {
+        std::cout << "Sports Car Model: " << model << ", Horsepower: " << horsepower << " HP" << std::endl;
+    }
+};
+class SUV : public Car {
+private:
+    std::string model;
+    bool fourWheelDrive;
+public:
+    SUV(std::string m, bool fwd) : model(m), fourWheelDrive(fwd) {}
+
+    Car* clone() const override {
+        return new SUV(*this); 
+    }
+    void display() const override {
+        std::cout << "SUV Model: " << model << ", 4WD: " << (fourWheelDrive ? "Yes" : "No") << std::endl;
+    }
+};
+int main() {
+    Car* sportsCar = new SportsCar("Ferrari 488", 720);
+    Car* suvCar = new SUV("Toyota Land Cruiser", true);
+    Car* clonedSportsCar = sportsCar->clone();
+    Car* clonedSuvCar = suvCar->clone();
+    std::cout << "Original Sports Car:\n";
+    sportsCar->display();
+    std::cout << "Cloned Sports Car:\n";
+    clonedSportsCar->display();
+    std::cout << "Original SUV:\n";
+    suvCar->display();
+    std::cout << "Cloned SUV:\n";
+    clonedSuvCar->display();
+    return 0;
+}
