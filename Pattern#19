@@ -1,0 +1,43 @@
+#include <iostream>
+#include <string>
+class State {
+public:
+    virtual void handle() = 0;
+};
+class Context {
+private:
+    State* state;
+
+public:
+    Context(State* initialState) : state(initialState) {}
+
+    void setState(State* newState) {
+        state = newState;
+    }
+
+    void request() {
+        state->handle();
+    }
+};
+class ConcreteStateA : public State {
+public:
+    void handle() override {
+        std::cout << "State A: Handling request." << std::endl;
+    }
+};
+class ConcreteStateB : public State {
+public:
+    void handle() override {
+        std::cout << "State B: Handling request." << std::endl;
+    }
+};
+int main() {
+    ConcreteStateA stateA;
+    ConcreteStateB stateB;
+    Context context(&stateA); 
+    context.request(); 
+    context.setState(&stateB); 
+    context.request(); 
+
+    return 0;
+}
