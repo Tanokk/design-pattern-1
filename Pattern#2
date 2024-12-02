@@ -1,0 +1,81 @@
+#include <iostream>
+#include <string>
+class Button {
+public:
+    virtual void render() const = 0;
+    virtual ~Button() = default;
+};
+class TextField {
+public:
+    virtual void render() const = 0; 
+    virtual ~TextField() = default;
+};
+class GUIFactory {
+public:
+    virtual Button* createButton() const = 0; 
+    virtual TextField* createTextField() const = 0; 
+    virtual ~GUIFactory() = default;
+};
+class DarkThemeFactory : public GUIFactory {
+public:
+    Button* createButton() const override {
+        return new DarkButton(); 
+    }
+    TextField* createTextField() const override {
+        return new DarkTextField(); 
+    }
+};
+class LightThemeFactory : public GUIFactory {
+public:
+    Button* createButton() const override {
+        return new LightButton(); 
+    }
+    TextField* createTextField() const override {
+        return new LightTextField(); 
+    }
+};
+class DarkButton : public Button {
+public:
+    void render() const override {
+        std::cout << "Rendering Dark Button" << std::endl;
+    }
+};
+class DarkTextField : public TextField {
+public:
+    void render() const override {
+        std::cout << "Rendering Dark TextField" << std::endl;
+    }
+};
+class LightButton : public Button {
+public:
+    void render() const override {
+        std::cout << "Rendering Light Button" << std::endl;
+    }
+};
+class LightTextField : public TextField {
+public:
+    void render() const override {
+        std::cout << "Rendering Light TextField" << std::endl;
+    }
+};
+void renderUI(const GUIFactory& factory) {
+    Button* button = factory.createButton();
+    TextField* textField = factory.createTextField();
+
+    button->render();
+    textField->render();
+
+    delete button;
+    delete textField;
+}
+int main() {
+    GUIFactory* darkThemeFactory = new DarkThemeFactory();
+    GUIFactory* lightThemeFactory = new LightThemeFactory();
+
+    std::cout << "Dark Theme UI:\n";
+    renderUI(*darkThemeFactory);  
+
+    std::cout << "\nLight Theme UI:\n";
+    renderUI(*lightThemeFactory);  
+    return 0;
+}
