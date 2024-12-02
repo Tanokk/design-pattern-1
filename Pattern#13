@@ -1,0 +1,89 @@
+#include <iostream>
+#include <string>
+class Handler {
+public:
+    virtual void handleRequest(int level) = 0; 
+    virtual ~Handler() = default;
+};
+class LevelOneHandler : public Handler {
+private:
+    Handler* nextHandler;  
+
+public:
+    LevelOneHandler() : nextHandler(nullptr) {}
+
+    void setNextHandler(Handler* handler) {
+        nextHandler = handler;
+    }
+    void handleRequest(int level) override {
+        if (level == 1) {
+            std::cout << "LevelOneHandler: Handling request for level " << level << std::endl;
+        }
+        else if (nextHandler) {
+            nextHandler->handleRequest(level); 
+        }
+        else {
+            std::cout << "LevelOneHandler: No handler for level " << level << std::endl;
+        }
+    }
+};
+class LevelTwoHandler : public Handler {
+private:
+    Handler* nextHandler;
+
+public:
+    LevelTwoHandler() : nextHandler(nullptr) {}
+    void setNextHandler(Handler* handler) {
+        nextHandler = handler;
+    }
+    void handleRequest(int level) override {
+        if (level == 2) {
+            std::cout << "LevelTwoHandler: Handling request for level " << level << std::endl;
+        }
+        else if (nextHandler) {
+            nextHandler->handleRequest(level);
+        }
+        else {
+            std::cout << "LevelTwoHandler: No handler for level " << level << std::endl;
+        }
+    }
+};
+class LevelThreeHandler : public Handler {
+private:
+    Handler* nextHandler;
+
+public:
+    LevelThreeHandler() : nextHandler(nullptr) {}
+
+    void setNextHandler(Handler* handler) {
+        nextHandler = handler;
+    }
+    void handleRequest(int level) override {
+        if (level == 3) {
+            std::cout << "LevelThreeHandler: Handling request for level " << level << std::endl;
+        }
+        else if (nextHandler) {
+            nextHandler->handleRequest(level);
+        }
+        else {
+            std::cout << "LevelThreeHandler: No handler for level " << level << std::endl;
+        }
+    }
+};
+int main() {
+    LevelOneHandler levelOne;
+    LevelTwoHandler levelTwo;
+    LevelThreeHandler levelThree;
+    levelOne.setNextHandler(&levelTwo);
+    levelTwo.setNextHandler(&levelThree);
+    std::cout << "Request for level 1:" << std::endl;
+    levelOne.handleRequest(1);
+    std::cout << "\nRequest for level 2:" << std::endl;
+    levelOne.handleRequest(2);
+    std::cout << "\nRequest for level 3:" << std::endl;
+    levelOne.handleRequest(3);
+    std::cout << "\nRequest for level 4 (no handler):" << std::endl;
+    levelOne.handleRequest(4);
+
+    return 0;
+}
