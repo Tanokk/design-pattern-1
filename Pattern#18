@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+class Observer {
+public:
+    virtual void update(const std::string& message) = 0;
+};
+class Subject {
+private:
+    Observer* observer;
+    std::string state;
+
+public:
+    void attach(Observer* obs) {
+        observer = obs;
+    }
+
+    void setState(const std::string& newState) {
+        state = newState;
+        notify();
+    }
+
+    void notify() {
+        if (observer != nullptr) {
+            observer->update(state);
+        }
+    }
+};
+class ConcreteObserver : public Observer {
+private:
+    std::string name;
+
+public:
+    ConcreteObserver(const std::string& observerName) : name(observerName) {}
+
+    void update(const std::string& message) override {
+        std::cout << name << " received message: " << message << std::endl;
+    }
+};
+int main() {
+    Subject subject;
+    ConcreteObserver observer1("Observer 1");
+    subject.attach(&observer1);
+    subject.setState("State 1");
+    subject.setState("State 2");
+
+    return 0;
+}
