@@ -1,0 +1,40 @@
+#include <iostream>
+#include <string>
+
+class Settings {
+private:
+    Settings() {
+        theme = "Light";
+        language = "English";
+    }
+    std::string theme;
+    std::string language;
+public:
+    static Settings* getInstance() {
+        static Settings instance; 
+        return &instance;
+    }
+    void setTheme(const std::string& newTheme) {
+        theme = newTheme;
+    }
+    void setLanguage(const std::string& newLanguage) {
+        language = newLanguage;
+    }
+    void displaySettings() const {
+        std::cout << "Theme: " << theme << std::endl;
+        std::cout << "Language: " << language << std::endl;
+    }
+};
+int main() {
+    Settings* settings = Settings::getInstance();
+    settings->setTheme("Dark");
+    settings->setLanguage("Ukrainian");
+    std::cout << "Current Settings:\n";
+    settings->displaySettings();
+    Settings* anotherSettings = Settings::getInstance();
+    anotherSettings->setTheme("Light");
+    std::cout << "\nSettings after attempting to create another instance:\n";
+    anotherSettings->displaySettings();
+
+    return 0;
+}
