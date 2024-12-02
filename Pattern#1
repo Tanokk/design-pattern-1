@@ -1,0 +1,47 @@
+#include <iostream>
+#include <string>
+class Vehicle {
+public:
+    virtual void start() const = 0; 
+    virtual ~Vehicle() = default;
+};
+class Car : public Vehicle {
+public:
+    void start() const override {
+        std::cout << "Car is starting." << std::endl;
+    }
+};
+class Bike : public Vehicle {
+public:
+    void start() const override {
+        std::cout << "Bike is starting." << std::endl;
+    }
+};
+class VehicleFactory {
+public:
+    virtual Vehicle* createVehicle() const = 0;
+    virtual ~VehicleFactory() = default;
+};
+class CarFactory : public VehicleFactory {
+public:
+    Vehicle* createVehicle() const override {
+        return new Car(); 
+    }
+};
+class BikeFactory : public VehicleFactory {
+public:
+    Vehicle* createVehicle() const override {
+        return new Bike(); 
+    }
+};
+
+int main() {
+    VehicleFactory* carFactory = new CarFactory();
+    VehicleFactory* bikeFactory = new BikeFactory();
+    Vehicle* car = carFactory->createVehicle();
+    Vehicle* bike = bikeFactory->createVehicle();
+    car->start();
+    bike->start();
+
+    return 0;
+}
