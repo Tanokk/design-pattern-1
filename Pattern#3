@@ -1,0 +1,112 @@
+#include <iostream>
+#include <string>
+class Computer {
+public:
+    std::string processor;
+    std::string memory;
+    std::string disk;
+
+    void display() const {
+        std::cout << "Computer Configuration:\n";
+        std::cout << "Processor: " << processor << std::endl;
+        std::cout << "Memory: " << memory << std::endl;
+        std::cout << "Disk: " << disk << std::endl;
+    }
+};
+class ComputerBuilder {
+public:
+    virtual void buildProcessor() = 0;
+    virtual void buildMemory() = 0;
+    virtual void buildDisk() = 0;
+    virtual Computer* getResult() = 0;
+    virtual ~ComputerBuilder() = default;
+};
+class MidRangeComputerBuilder : public ComputerBuilder {
+private:
+    Computer* computer;
+public:
+    MidRangeComputerBuilder() {
+        computer = new Computer();
+    }
+
+    void buildProcessor() override {
+        computer->processor = "Intel Core i5";
+    }
+
+    void buildMemory() override {
+        computer->memory = "16 GB";
+    }
+
+    void buildDisk() override {
+        computer->disk = "512 GB SSD";
+    }
+
+    Computer* getResult() override {
+        return computer;
+    }
+
+    ~MidRangeComputerBuilder() {
+        delete computer;
+    }
+};
+class HighEndComputerBuilder : public ComputerBuilder {
+private:
+    Computer* computer;
+public:
+    HighEndComputerBuilder() {
+        computer = new Computer();
+    }
+
+    void buildProcessor() override {
+        computer->processor = "Intel Core i9";
+    }
+
+    void buildMemory() override {
+        computer->memory = "32 GB";
+    }
+
+    void buildDisk() override {
+        computer->disk = "1 TB SSD";
+    }
+
+    Computer* getResult() override {
+        return computer;
+    }
+
+    ~HighEndComputerBuilder() {
+        delete computer;
+    }
+};
+class Director {
+private:
+    ComputerBuilder* builder;
+
+public:
+    Director(ComputerBuilder* builder) : builder(builder) {}
+
+    void construct() {
+        builder->buildProcessor();
+        builder->buildMemory();
+        builder->buildDisk();
+    }
+
+    Computer* getComputer() {
+        return builder->getResult();
+    }
+};
+
+int main() {
+    ComputerBuilder* midRangeBuilder = new MidRangeComputerBuilder();
+    ComputerBuilder* highEndBuilder = new HighEndComputerBuilder();
+    Director midRangeDirector(midRangeBuilder);
+    Director highEndDirector(highEndBuilder);
+    midRangeDirector.construct();
+    Computer* midRangeComputer = midRangeDirector.getComputer();
+    std::cout << "Mid-Range Computer:\n";
+    midRangeComputer->display();
+    highEndDirector.construct();
+    Computer* highEndComputer = highEndDirector.getComputer();
+    std::cout << "\nHigh-End Computer:\n";
+    highEndComputer->display();
+    return 0;
+}
