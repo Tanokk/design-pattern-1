@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+class RealService {
+public:
+    void performTask() {
+        std::cout << "RealService: Performing a task." << std::endl;
+    }
+};
+class ProxyService {
+private:
+    RealService* realService;
+    bool hasAccess;  
+public:
+    ProxyService() : realService(nullptr), hasAccess(false) {}
+    void setAccess(bool access) {
+        hasAccess = access;
+    }
+
+    void performTask() {
+        if (hasAccess) {
+            if (!realService) {
+                realService = new RealService();
+            }
+            realService->performTask();
+        }
+        else {
+            std::cout << "ProxyService: Access denied!" << std::endl;
+        }
+    }
+
+    ~ProxyService() {
+        delete realService;
+    }
+};
+int main() {
+    ProxyService proxy;
+    std::cout << "Without access:" << std::endl;
+    proxy.performTask();
+    std::cout << "\nWith access:" << std::endl;
+    proxy.setAccess(true);
+    proxy.performTask();
+
+    return 0;
+}
