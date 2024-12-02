@@ -1,0 +1,109 @@
+#include <iostream>
+#include <string>
+class Device {
+public:
+    virtual void turnOn() = 0;
+    virtual void turnOff() = 0;
+    virtual void setVolume(int volume) = 0;
+    virtual ~Device() = default;
+};
+class TV : public Device {
+private:
+    int volume;
+public:
+    TV() : volume(10) {}
+
+    void turnOn() override {
+        std::cout << "TV is turned ON" << std::endl;
+    }
+
+    void turnOff() override {
+        std::cout << "TV is turned OFF" << std::endl;
+    }
+
+    void setVolume(int v) override {
+        volume = v;
+        std::cout << "TV volume set to: " << volume << std::endl;
+    }
+};
+class Radio : public Device {
+private:
+    int volume;
+public:
+    Radio() : volume(5) {}
+
+    void turnOn() override {
+        std::cout << "Radio is turned ON" << std::endl;
+    }
+
+    void turnOff() override {
+        std::cout << "Radio is turned OFF" << std::endl;
+    }
+
+    void setVolume(int v) override {
+        volume = v;
+        std::cout << "Radio volume set to: " << volume << std::endl;
+    }
+};
+class Remote {
+protected:
+    Device* device;
+public:
+    Remote(Device* d) : device(d) {}
+    virtual void powerButton() = 0;
+    virtual void volumeUp() = 0;
+    virtual void volumeDown() = 0;
+    virtual ~Remote() = default;
+};
+class TVRemote : public Remote {
+public:
+    TVRemote(Device* d) : Remote(d) {}
+
+    void powerButton() override {
+        std::cout << "Power button pressed on TV remote." << std::endl;
+        device->turnOn();
+    }
+
+    void volumeUp() override {
+        std::cout << "Volume up on TV remote." << std::endl;
+        device->setVolume(15); 
+    }
+
+    void volumeDown() override {
+        std::cout << "Volume down on TV remote." << std::endl;
+        device->setVolume(5);
+    }
+};
+class RadioRemote : public Remote {
+public:
+    RadioRemote(Device* d) : Remote(d) {}
+
+    void powerButton() override {
+        std::cout << "Power button pressed on Radio remote." << std::endl;
+        device->turnOn();
+    }
+
+    void volumeUp() override {
+        std::cout << "Volume up on Radio remote." << std::endl;
+        device->setVolume(10); 
+    }
+
+    void volumeDown() override {
+        std::cout << "Volume down on Radio remote." << std::endl;
+        device->setVolume(3); 
+    }
+};
+int main() {
+    Device* tv = new TV();
+    Device* radio = new Radio();
+    Remote* tvRemote = new TVRemote(tv);
+    Remote* radioRemote = new RadioRemote(radio);
+    tvRemote->powerButton();
+    tvRemote->volumeUp();
+    tvRemote->volumeDown();
+    std::cout << std::endl;
+    radioRemote->powerButton();
+    radioRemote->volumeUp();
+    radioRemote->volumeDown();
+    return 0;
+}
