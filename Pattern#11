@@ -1,0 +1,67 @@
+#include <iostream>
+#include <string>
+class Character {
+public:
+    virtual void display() const = 0; 
+    virtual ~Character() = default;
+};
+class Letter : public Character {
+private:
+    char letter; 
+
+public:
+    Letter(char letter) : letter(letter) {}
+
+    void display() const override {
+        std::cout << "Letter: " << letter << std::endl;
+    }
+};
+class CharacterFactory {
+private:
+    static Letter* letterA;
+    static Letter* letterB;
+    static Letter* letterC;
+
+public:
+    static Character* getCharacter(char letter) {
+        if (letter == 'A') {
+            if (!letterA) {
+                letterA = new Letter('A');
+            }
+            return letterA;
+        }
+        if (letter == 'B') {
+            if (!letterB) {
+                letterB = new Letter('B');
+            }
+            return letterB;
+        }
+        if (letter == 'C') {
+            if (!letterC) {
+                letterC = new Letter('C');
+            }
+            return letterC;
+        }
+        return nullptr; 
+    }
+    static void cleanup() {
+        delete letterA;
+        delete letterB;
+        delete letterC;
+    }
+};
+Letter* CharacterFactory::letterA = nullptr;
+Letter* CharacterFactory::letterB = nullptr;
+Letter* CharacterFactory::letterC = nullptr;
+int main() {
+    Character* c1 = CharacterFactory::getCharacter('A');
+    Character* c2 = CharacterFactory::getCharacter('B');
+    Character* c3 = CharacterFactory::getCharacter('A');  
+    Character* c4 = CharacterFactory::getCharacter('C');
+
+    c1->display();
+    c2->display();
+    c3->display(); 
+    c4->display();
+    return 0;
+}
