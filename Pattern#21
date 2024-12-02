@@ -1,0 +1,44 @@
+#include <iostream>
+#include <string>
+class AbstractClass {
+public:
+    void templateMethod() {
+        stepOne();
+        stepTwo();
+        stepThree();
+    }
+
+    virtual ~AbstractClass() {}
+
+protected:
+    virtual void stepOne() {
+        std::cout << "Step One: Default implementation" << std::endl;
+    }
+    virtual void stepTwo() = 0; 
+
+    virtual void stepThree() {
+        std::cout << "Step Three: Default implementation" << std::endl;
+    }
+};
+class ConcreteClassA : public AbstractClass {
+protected:
+    void stepTwo() override {
+        std::cout << "ConcreteClassA: Custom implementation for step two" << std::endl;
+    }
+};
+class ConcreteClassB : public AbstractClass {
+protected:
+    void stepTwo() override {
+        std::cout << "ConcreteClassB: Custom implementation for step two" << std::endl;
+    }
+};
+int main() {
+    ConcreteClassA classA;
+    ConcreteClassB classB;
+    std::cout << "Running algorithm in ConcreteClassA:" << std::endl;
+    classA.templateMethod(); 
+    std::cout << "\nRunning algorithm in ConcreteClassB:" << std::endl;
+    classB.templateMethod();  
+
+    return 0;
+}
